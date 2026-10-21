@@ -1,13 +1,6 @@
 module github.com/MarcoCarvin/ahv-remote-console
 
-go 1.25.0
-
-// Pin the build toolchain to a stdlib patched against GO-2026-5037 (crypto/x509)
-// and GO-2026-5039 (net/textproto). The CI image's rolling go1.25 tag lagged at
-// 1.25.10; GOTOOLCHAIN=auto fetches this exact toolchain so govulncheck is clean
-// regardless of the base image. A newer local toolchain (e.g. 1.26.x) is used
-// as-is — this is a floor, not a downgrade.
-toolchain go1.25.12
+go 1.26.0
 
 require (
 	github.com/diskfs/go-diskfs v1.9.3
@@ -17,10 +10,10 @@ require (
 	github.com/jchv/go-webview2 v0.0.0-20260205173254-56598839c808
 	github.com/tc-hib/winres v0.3.1
 	github.com/zalando/go-keyring v0.2.8
-	go.opentelemetry.io/otel v1.43.0
+	go.opentelemetry.io/otel v1.47.0
 	go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp v1.43.0
 	go.opentelemetry.io/otel/sdk v1.43.0
-	go.opentelemetry.io/otel/trace v1.43.0
+	go.opentelemetry.io/otel/trace v1.47.0
 	golang.org/x/sys v0.44.0
 )
 
@@ -46,7 +39,7 @@ require (
 	github.com/go-git/gcfg v1.5.1-0.20230307220236-3a3c6141e376 // indirect
 	github.com/go-git/go-billy/v5 v5.9.0 // indirect
 	github.com/go-git/go-git/v5 v5.19.1 // indirect
-	github.com/go-logr/logr v1.4.3 // indirect
+	github.com/go-logr/logr v1.4.4 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/gobwas/glob v0.2.3 // indirect
 	github.com/godbus/dbus/v5 v5.2.2 // indirect
@@ -78,9 +71,10 @@ require (
 	gitlab.com/digitalxero/go-conventional-commit v1.0.7 // indirect
 	go.opentelemetry.io/auto/sdk v1.2.1 // indirect
 	go.opentelemetry.io/otel/exporters/otlp/otlptrace v1.43.0 // indirect
-	go.opentelemetry.io/otel/metric v1.43.0 // indirect
+	go.opentelemetry.io/otel/log v1.47.0 // indirect
+	go.opentelemetry.io/otel/metric v1.47.0 // indirect
 	go.opentelemetry.io/proto/otlp v1.10.0 // indirect
-	go.yaml.in/yaml/v3 v3.0.4 // indirect
+	go.yaml.in/yaml/v3 v3.0.5 // indirect
 	golang.org/x/crypto v0.50.0 // indirect
 	golang.org/x/image v0.12.0 // indirect
 	golang.org/x/net v0.53.0 // indirect
