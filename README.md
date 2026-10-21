@@ -29,7 +29,8 @@ Clipboard sync. This needs the host module and the guest agent:
 
 ## Demo
 
-<video src="https://github.com/user-attachments/assets/29e9d2fe-991e-419d-873d-c1f1ff9d31b1" controls width="100%"></video>
+
+<video src="https://github.com/user-attachments/assets/6746a5ae-08a8-4155-9c62-a0b1fe41981b" controls width="100%"></video>
 
 The demo runs 1:39 and covers:
 
