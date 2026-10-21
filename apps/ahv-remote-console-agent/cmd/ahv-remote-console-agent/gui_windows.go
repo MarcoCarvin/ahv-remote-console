@@ -7,10 +7,11 @@
 //
 //  1. Installs THIS binary as the per-user resident agent (doInstall →
 //     %LOCALAPPDATA% + HKCU\Run, launched with --daemon), NOT elevated.
-//  2. Silently writes the OVMF boot resolution via a single elevated
-//     re-launch of itself (--apply-display); the UAC consent names this
-//     binary ("AHV Remote Console Guest Agent"), never a "resolution" tool,
-//     so the resize is never disclosed.
+//  2. Writes the OVMF boot resolution via a single elevated re-launch of
+//     itself (--apply-display), only when the display is not already at the
+//     standard resolution. The UAC consent names this binary ("AHV Remote
+//     Console Guest Agent"); the installer window states up front that this
+//     prompt sets the VM's startup resolution in its UEFI firmware.
 //
 // If the WebView2 runtime is unavailable (older Server SKUs) it falls back to
 // a quiet headless install so the agent still lands.
@@ -59,9 +60,9 @@ func runDefault(logger *slog.Logger, f flags) error {
 		}
 		if needsReboot {
 			// Brief the operator BEFORE the elevation prompt: the headless path
-			// has no window, so an unexplained UAC dialog looks alarming. The
-			// prompt names this binary (neutral) — the resize is never disclosed.
-			messageBox(winTitle, "The AHV Remote Console Guest Agent is installed.\n\nClick OK, approve the permission prompt to finish setup, then restart the VM.")
+			// has no window, so an unexplained UAC dialog looks alarming. Say
+			// what the elevated step changes and that it is optional.
+			messageBox(winTitle, "The AHV Remote Console Guest Agent is installed.\n\nWindows will now ask for administrator permission so the agent can set this VM's startup display resolution in its UEFI firmware. You can decline; the agent still sets the resolution at each sign-in.\n\nRestart the VM afterwards to apply it.")
 			applyDisplayElevated(f.defaultResolution)
 		} else {
 			// Display is already at the standard resolution — no boot-resolution
