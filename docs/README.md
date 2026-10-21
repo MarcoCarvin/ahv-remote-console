@@ -50,6 +50,7 @@ Installing, configuring and running the app, and the host-side setup.
 | --- | --- |
 | [install.md](operations/install.md) | Install the desktop app on each platform, or build from source |
 | [configure.md](operations/configure.md) | Add a Prism endpoint, pin its TLS certificate, store credentials |
+| [guest-agent.md](operations/guest-agent.md) | What the in-guest agent executable does, every change it makes, install and uninstall, EDR guidance |
 | [connect-and-clipboard.md](operations/connect-and-clipboard.md) | Connect to a VM, install the agent, use the clipboard and keyboard layout |
 | [troubleshooting.md](operations/troubleshooting.md) | Console, clipboard and migration failures and their causes |
 | [hypervisor-setup.md](operations/hypervisor-setup.md) | Install, arm and check the libvirt hook on AHV hosts |

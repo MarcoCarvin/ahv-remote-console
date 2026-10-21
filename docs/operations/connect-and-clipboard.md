@@ -110,6 +110,12 @@ ISO.
    | Linux headless, or no admin | Run `sh <mount-point>/linux/install.sh`. No root needed. |
 
 The agent always installs per user, never machine-wide, and starts at each login.
+
+> [!IMPORTANT]
+> Read [Guest agent](guest-agent.md) before you install it. It lists every change the
+> installer makes, including the one elevated step that writes the VM's firmware boot
+> resolution, and explains why unsigned builds can be blocked by EDR or antivirus
+> software. Without the agent, the console works but copy and paste does not.
 For install, daemon and uninstall modes, see the
 [agent CLI reference](../reference/agent-cli.md).
 
@@ -183,6 +189,13 @@ Source: [`apps/desktop/src/renderer/components/useAgent.ts`](../../apps/desktop/
 [`cmd/isobuilder/assets/README.txt`](../../cmd/isobuilder/assets/README.txt).
 
 ## Use the clipboard
+
+> [!IMPORTANT]
+> While your console window is open, the VM cannot be live-migrated, because the
+> clipboard channel uses its serial port. Before a maintenance window, close your
+> console windows for the affected VMs. The VM becomes migratable about 3 seconds
+> later. See
+> [Live migration and maintenance windows](../../README.md#live-migration-and-maintenance-windows).
 
 There is no switch to turn on. Once the agent runs in the VM and COM3 exists, the
 clipboard works. The console marks the agent connected as soon as the console tab is

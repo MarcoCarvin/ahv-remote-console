@@ -5,6 +5,20 @@ hook on AHV hosts. It covers prerequisites, install, arming, verification,
 host drains and roll-back. For why the hook exists, read
 [vdagent and live migration](../architecture/live-migration.md).
 
+The hook is the host module that clipboard sync needs. Without it, AHV Remote
+Console still works as a remote console, without copy and paste.
+
+> [!CAUTION]
+> **Install the host module at your own risk.** It runs as root on Nutanix AHV
+> hypervisor hosts and changes how QEMU serial ports are configured. It is not part
+> of AHV, and Nutanix does not support or endorse it. Installing it can affect your
+> Nutanix support, and AHV upgrades can remove or break it. Use it only in
+> environments you own or are authorised to change. Test it in a lab first, and keep
+> the [roll-back steps](#roll-back) ready. The software is provided "as is", without
+> warranty. You are responsible for any outage, data loss or other damage that
+> results from installing or running it. See sections 7 and 8 of the
+> [LICENSE](../../LICENSE).
+
 ## Contents
 
 - [How the hook works](#how-the-hook-works)
@@ -287,6 +301,13 @@ The flag file survives restarts and is what the deploy scripts use.
 
 A host drain must live-migrate every running VM off the host. A VM with an armed
 vdagent chardev would refuse to migrate and stall the drain.
+
+> [!IMPORTANT]
+> Automated patching and upgrades do not create the maintenance marker described
+> below. Before such a window, make sure every operator has closed their console
+> windows for the VMs on the host. With no console attached, the hook parks each VM
+> about 3 seconds later and live migration works. Cold migration of a powered-off VM
+> is always possible.
 
 While the host is in maintenance, the manager parks every local VM at once,
 including VMs with a console attached. It skips the grace time and refuses to arm

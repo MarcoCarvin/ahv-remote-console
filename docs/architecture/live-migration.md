@@ -43,9 +43,15 @@ While `COM3` has a `qemu-vdagent` backend, the VM cannot live-migrate.
 
 ### Effect on cluster operations
 
+- **Operator consoles.** A VM stays blocked while any operator has a console window
+  open for it. Before automated maintenance, every operator must close their
+  console windows for the affected VMs. The hook sees the VNC disconnect and parks
+  `COM3` automatically, and live migration works again. Cold migration of a
+  powered-off VM is always possible.
 - **Host maintenance.** A drain must live-migrate every running VM off the host.
-  One VM with an armed backend stops the drain. This is why the hook parks all
-  local VMs when the host enters maintenance.
+  One VM with an armed backend stops the drain. The hook parks all local VMs only
+  when the maintenance marker exists, and you must create that marker yourself. See
+  [Maintenance and drain override](../operations/hypervisor-setup.md#maintenance-and-drain-override).
 - **Acropolis Dynamic Scheduler (ADS).** ADS migrates on a best-effort basis and
   skips a blocked VM.
 - **HA failover.** Not affected. HA powers the VM on again on a new host and

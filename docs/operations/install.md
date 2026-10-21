@@ -259,6 +259,12 @@ builds a failed verify is a warning.
 
 ## Signing
 
+Sign everything you distribute: the desktop installer and the guest agent. Unsigned
+builds trigger SmartScreen on Windows and Gatekeeper on macOS, and EDR or antivirus
+products can block them. The guest agent is the most likely to be flagged, because
+it starts at login and uses the clipboard and a serial port. See
+[Guest agent](guest-agent.md#code-signing-and-endpoint-security).
+
 ### macOS
 
 > [!WARNING]

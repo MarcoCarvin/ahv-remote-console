@@ -374,13 +374,15 @@ migratable.
 
 **Fix:**
 
-1. Close the console on the VM.
+1. Ask every operator who may have the VM open to close its console window. A
+   console open on any one computer keeps the VM blocked.
 2. Wait a few seconds. The hook switches COM3 back to a plain socket about
    3 seconds after the last console closes.
-3. Migrate the VM.
+3. Migrate the VM. If you cannot reach every operator, power the VM off and use a
+   cold migration, which is always possible.
 
-To drain a host, close the consoles on the VMs you need to move, or use the
-maintenance override in [Setting up AHV hosts](hypervisor-setup.md#maintenance-and-drain-override).
+To drain a host, make sure every operator has closed their console windows for the
+VMs on it, or use the maintenance override in [Setting up AHV hosts](hypervisor-setup.md#maintenance-and-drain-override).
 The override parks every VM, including VMs with a console open.
 
 ### VMs stay blocked, or the clipboard never arms
