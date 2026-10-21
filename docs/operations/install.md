@@ -93,7 +93,7 @@ Source: [`apps/desktop/electron-builder.yml`](../../apps/desktop/electron-builde
 
 | Tool | Version                                |
 | ---- | -------------------------------------- |
-| Go   | 1.25, toolchain pinned to `go1.25.12`  |
+| Go   | 1.26, toolchain pinned to `go1.26.10`  |
 | Node | 24 or later                            |
 | pnpm | 11 or later (`pnpm@11.1.3`)            |
 | bash | Any real bash on `PATH`                |

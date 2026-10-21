@@ -9,7 +9,7 @@ Read the [Code of Conduct](CODE_OF_CONDUCT.md) first.
 
 ## Development setup
 
-You need Go 1.25, Node 24 (see `.nvmrc`) and pnpm 11 (see `packageManager` in
+You need Go 1.26, Node 24 (see `.nvmrc`) and pnpm 11 (see `packageManager` in
 `package.json`). Platform notes are in [Building from source](docs/development/build.md).
 
 ```bash

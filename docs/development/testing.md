@@ -180,9 +180,9 @@ CI runs on GitHub Actions. The workflows are in `.github/workflows/`.
 
 | Job | Runs on | What it does |
 | --- | --- | --- |
-| `lint` | `ubuntu-22.04` | `pnpm lint` |
+| `lint` | `ubuntu-22.04` | Builds the TypeScript libraries, then runs `pnpm lint` and `scripts/check-plain-words.sh` |
 | `notices-drift` | `ubuntu-22.04` | Runs `pnpm notices:generate` and fails if `THIRD_PARTY_NOTICES.md` changes |
-| `test` | `ubuntu-22.04`, `windows-2022` | `pnpm test:go`, then `pnpm test` |
+| `test` | `ubuntu-22.04`, `windows-2022` | Builds the TypeScript libraries, then runs `pnpm test:go` and `pnpm test` |
 | `build-runtime` | `ubuntu-22.04` | Builds the runtime for `linux/amd64`, `linux/arm64`, `windows/amd64` and `darwin/arm64` |
 | `desktop` | `ubuntu-22.04`, `windows-2022` | `pnpm build`, then packages the desktop app unsigned |
 
@@ -208,8 +208,8 @@ When you add or update a dependency, run `pnpm notices:generate` and commit the 
 
 ### Shared settings
 
-- Jobs install Go `1.25`, Node.js from `.nvmrc` and pnpm `11.1.3` as they need them.
-  The `toolchain` line in `go.mod` then selects `go1.25.12` if the runner's Go is
+- Jobs install Go `1.26`, Node.js from `.nvmrc` and pnpm `11.1.3` as they need them.
+  The `toolchain` line in `go.mod` then selects `go1.26.10` if the runner's Go is
   older.
 - `gosec` (`v2.22.7`), `govulncheck` (`v1.1.4`) and `go-licenses` (`v1.6.0`) are
   pinned.

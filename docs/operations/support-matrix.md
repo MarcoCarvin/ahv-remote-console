@@ -66,7 +66,7 @@ Source: [`apps/desktop/electron-builder.yml`](../../apps/desktop/electron-builde
 | -------------------------- | --------------------------------------------------------------- |
 | Node.js                    | `>=24.0.0` (engines), `24.15.0` (`.nvmrc`). CI reads `.nvmrc`.  |
 | pnpm                       | `pnpm@11.1.3` (packageManager), engines `>=11.0.0`, CI `11.1.3` |
-| Go                         | `go 1.25.0` in `go.mod`, `toolchain go1.25.12`, CI `1.25`       |
+| Go                         | `go 1.26.0` in `go.mod`, `toolchain go1.26.10`, CI `1.26`       |
 | Electron                   | `42.2.0`                                                        |
 | electron-builder           | `26.8.1`                                                        |
 | electron-updater           | `6.8.9`                                                         |

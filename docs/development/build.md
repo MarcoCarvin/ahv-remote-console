@@ -31,7 +31,7 @@ per-component Makefile or a pnpm workspace command.
 
 | Tool | Version | Source |
 | --- | --- | --- |
-| Go | 1.25.0 or later; toolchain pinned to `go1.25.12` | `go.mod` |
+| Go | 1.26.0 or later; toolchain pinned to `go1.26.10` | `go.mod` |
 | Node.js | 24.0.0 or later; `24.15.0` recommended | `package.json`, `.nvmrc` |
 | pnpm | `11.1.3` (minimum 11.0.0) | `package.json` (`packageManager`) |
 | bash | any | required by every Makefile |
@@ -39,11 +39,11 @@ per-component Makefile or a pnpm workspace command.
 
 Notes:
 
-- **Go.** The `toolchain go1.25.12` line is a floor. With the default
-  `GOTOOLCHAIN=auto`, an older 1.25.x fetches `go1.25.12`. A newer toolchain, such as
-  1.26.x, is used as is. The pinned patch release contains standard library fixes for
-  GO-2026-5037 (`crypto/x509`) and GO-2026-5039 (`net/textproto`), which `govulncheck`
-  would otherwise report.
+- **Go.** The `toolchain go1.26.10` line is a floor. With the default
+  `GOTOOLCHAIN=auto`, an older 1.26.x fetches `go1.26.10`. A newer toolchain is used as
+  is. The pinned patch release contains standard library fixes that `govulncheck`
+  would otherwise report. Go 1.26 is the minimum because the patched releases of
+  `golang.org/x/net` and OpenTelemetry require it.
 - **pnpm.** Use the exact pinned version. pnpm 11 sandboxes dependency build scripts
   and quarantines very recent releases. The repository configures both in
   `pnpm-workspace.yaml`.
