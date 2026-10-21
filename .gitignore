@@ -89,9 +89,6 @@ coverage/
 # Auto-update staging
 .updates/
 *.har
-.claude/worktrees/
-.claude/workflows/
-.claude/scheduled_tasks.lock
 # Locally-compiled agent installer binary (CI rebuilds it)
 /ahv-agent-setup
 __pycache__/
