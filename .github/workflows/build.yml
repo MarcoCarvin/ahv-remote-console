@@ -1,0 +1,167 @@
+name: build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: lint
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.1.3
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.25'
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: scripts/check-plain-words.sh
+
+  # RELE-02: regenerate THIRD_PARTY_NOTICES.md and fail if it drifts from the
+  # committed copy (a dependency was added/bumped without running
+  # `pnpm notices:generate`).
+  notices-drift:
+    name: notices-drift
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.1.3
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.25'
+      - run: pnpm install --frozen-lockfile
+      - run: go install github.com/google/go-licenses@v1.6.0
+      - run: pnpm notices:generate
+      - name: Fail on notices drift
+        run: |
+          if ! git diff --exit-code THIRD_PARTY_NOTICES.md; then
+            echo "THIRD_PARTY_NOTICES.md is out of date — run 'pnpm notices:generate' and commit the result." >&2
+            exit 1
+          fi
+          echo "OK: THIRD_PARTY_NOTICES.md is up to date"
+
+  test:
+    name: test (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-22.04, windows-2022]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.1.3
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.25'
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm test:go
+      - run: pnpm test
+
+  build-runtime:
+    name: runtime (${{ matrix.goos }}/${{ matrix.goarch }})
+    runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - goos: linux
+            goarch: amd64
+          - goos: linux
+            goarch: arm64
+          - goos: windows
+            goarch: amd64
+          - goos: darwin
+            goarch: arm64
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.25'
+      - name: Build runtime
+        # RELE-04: inject version/commit/date so binaries don't ship as
+        # Version=dev Commit=unknown. apps/runtime/Makefile reads the
+        # AHV_REMOTE_CONSOLE_* env vars.
+        env:
+          GOOS: ${{ matrix.goos }}
+          GOARCH: ${{ matrix.goarch }}
+          CGO_ENABLED: '0'
+          AHV_REMOTE_CONSOLE_VERSION: ${{ github.sha }}
+          AHV_REMOTE_CONSOLE_COMMIT: ${{ github.sha }}
+        run: |
+          export AHV_REMOTE_CONSOLE_DATE="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          make -C apps/runtime build
+          make -C plugins/ahv build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: runtime-${{ matrix.goos }}-${{ matrix.goarch }}
+          path: |
+            apps/runtime/bin/*
+            plugins/ahv/bin/*
+          if-no-files-found: error
+          retention-days: 14
+
+  desktop:
+    name: desktop (${{ matrix.os }})
+    needs: [build-runtime]
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-22.04
+            runtime-artifact: runtime-linux-amd64
+          - os: windows-2022
+            runtime-artifact: runtime-windows-amd64
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.1.3
+      - uses: actions/download-artifact@v4
+        with:
+          name: ${{ matrix.runtime-artifact }}
+          path: build/runtime/
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - run: pnpm --filter @ahv-remote-console/desktop package
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: desktop-${{ matrix.os }}
+          path: |
+            apps/desktop/release/**/*.exe
+            apps/desktop/release/**/*.msi
+            apps/desktop/release/**/*.AppImage
+            apps/desktop/release/**/*.deb
+            apps/desktop/release/**/*.rpm
+          if-no-files-found: warn
+          retention-days: 14

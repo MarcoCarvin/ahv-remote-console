@@ -1,0 +1,124 @@
+/* v2 atomic animation layer.
+ *
+ * Always-on, GPU-friendly, no JS state. Compositor-only properties
+ * (transform, opacity, background-position). Per the spec these
+ * complement the existing motion.css legacy layer; new components
+ * use the rules in this file, existing wired components keep using
+ * the old class names until they're individually migrated.
+ *
+ * Reduced motion: the global media-query kill at the bottom of
+ * motion.css covers everything in here too.
+ */
+
+/* === B3: Live-dot pulse (new component-class form) === */
+.live-pulse {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--hc-success, #689838);
+  animation: livePulse 2.2s ease-in-out infinite;
+  /* When a list renders multiple live-dots, the parent sets
+     `style={{ '--idx': index }}` so they don't pulse in lockstep. */
+  animation-delay: calc(var(--idx, 0) * 0.2s);
+}
+@keyframes livePulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.5; transform: scale(0.85); }
+}
+
+/* === A4: Shimmer (skeleton block) === */
+.shim {
+  background: linear-gradient(
+    90deg,
+    var(--hc-bg-1, #15263a) 0%,
+    var(--hc-bg-2, #1a3048) 50%,
+    var(--hc-bg-1, #15263a) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimSweep 1.4s linear infinite;
+  border-radius: 4px;
+}
+@keyframes shimSweep {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* === D1: Card hover lift (new component-class form) === */
+.card-lift {
+  transition:
+    transform var(--dur-short4, 200ms) var(--ease-standard, cubic-bezier(0.2, 0, 0, 1)),
+    box-shadow var(--dur-short4, 200ms) var(--ease-standard, cubic-bezier(0.2, 0, 0, 1)),
+    border-color var(--dur-short4, 200ms) var(--ease-standard, cubic-bezier(0.2, 0, 0, 1));
+}
+.card-lift:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px -14px rgba(8, 120, 200, 0.35);
+  border-color: var(--hc-accent-200, #b8d8e8);
+}
+.card-lift:hover .arr {
+  transform: translateX(4px);
+  color: var(--hc-accent-500, #0878c8);
+  transition: transform var(--dur-short4, 200ms) var(--ease-standard);
+}
+
+/* === D2: Material ripple (new useRipple hook + RippleHost form) === */
+.ripple-host {
+  position: relative;
+  overflow: hidden;
+}
+.ripple-host .ripple-dot {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  transform: scale(0);
+  pointer-events: none;
+  width: 16px;
+  height: 16px;
+  margin-left: -8px;
+  margin-top: -8px;
+}
+.ripple-host .ripple-dot.go {
+  animation: rippleX 600ms var(--ease-decel, cubic-bezier(0.05, 0.7, 0.1, 1));
+}
+@keyframes rippleX {
+  from { transform: scale(0); opacity: 0.55; }
+  to   { transform: scale(40); opacity: 0; }
+}
+
+/* === E4: Shake (new ShakeWrapper component form) === */
+.shake-active {
+  animation: shakeX 420ms cubic-bezier(0.36, 0.07, 0.19, 0.97);
+}
+@keyframes shakeX {
+  10%, 90%   { transform: translateX(-2px); }
+  20%, 80%   { transform: translateX(3px); }
+  30%, 50%, 70% { transform: translateX(-5px); }
+  40%, 60%   { transform: translateX(5px); }
+}
+
+/* === E2: Success check draw (new SuccessCheck component form) === */
+.check-svg circle {
+  fill: none;
+  stroke: var(--hc-success, #689838);
+  stroke-width: 3;
+  stroke-dasharray: 170;
+  stroke-dashoffset: 170;
+}
+.check-svg path {
+  fill: none;
+  stroke: var(--hc-success, #689838);
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 50;
+  stroke-dashoffset: 50;
+}
+.check-svg.go circle {
+  animation: drawCircleV2 0.35s var(--ease-decel, cubic-bezier(0.05, 0.7, 0.1, 1)) forwards;
+}
+.check-svg.go path {
+  animation: drawCheckV2 0.35s var(--ease-decel, cubic-bezier(0.05, 0.7, 0.1, 1)) 0.25s forwards;
+}
+@keyframes drawCircleV2 { to { stroke-dashoffset: 0; } }
+@keyframes drawCheckV2 { to { stroke-dashoffset: 0; } }

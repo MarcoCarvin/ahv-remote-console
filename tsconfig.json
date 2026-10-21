@@ -1,0 +1,10 @@
+{
+  "files": [],
+  "references": [
+    { "path": "./apps/desktop" },
+    { "path": "./packages/protocol" },
+    { "path": "./packages/sdk" },
+    { "path": "./packages/telemetry" },
+    { "path": "./packages/ui" }
+  ]
+}

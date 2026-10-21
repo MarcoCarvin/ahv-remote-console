@@ -1,0 +1,15 @@
+AHV Remote Console
+Copyright (c) 2026 Errevi S.p.A.
+
+This product is a custom integration built on the Nutanix AHV virtualization
+stack. It talks to Nutanix Prism (the v3 REST API and the VNC console), mounts
+an agent ISO into guest virtual machines, and includes modifications that change
+how those vendor components are used. It is not a Nutanix product, and it has
+not been reviewed, endorsed or supported by Nutanix, Inc.
+
+Nutanix, AHV, Prism and Nutanix Guest Tools are trademarks of Nutanix, Inc. They
+are named in this repository only to describe compatibility. This repository
+does not contain Nutanix source code or binaries.
+
+Third-party components and their license texts are listed in
+THIRD_PARTY_NOTICES.md.

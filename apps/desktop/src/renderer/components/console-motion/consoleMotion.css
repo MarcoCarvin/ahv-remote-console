@@ -1,0 +1,521 @@
+/*
+ * consoleMotion.css — "active console motion" layer (C1–C12).
+ *
+ * Self-contained palette + every keyframe used by the components in
+ * ./console-motion. Everything here is COMPOSITOR-ONLY (transform /
+ * opacity) so it can run at 60fps on top of a live framebuffer stream
+ * without triggering layout or paint of the guest pixels.
+ *
+ * Scope: all tokens live under `.cm-root`. Each component renders its
+ * own root element carrying that class, so the variables resolve
+ * locally and never leak into the rest of the app.
+ *
+ * Reduced motion: a single HARD-GATE block at the bottom
+ * (`@media (prefers-reduced-motion: reduce)`) collapses EVERY
+ * animation to a static end-state. The useConsoleMotion hook ALSO
+ * exposes a `reducedMotion` flag (from `!useMotion().enabled`) so
+ * components can additionally skip mounting particle/3D work — the CSS
+ * gate is the backstop, the hook flag is the optimisation.
+ */
+
+.cm-root {
+  /* palette */
+  --cm-blue: #1f6fe5;
+  --cm-blue-light: #4f93f0;
+  --cm-green: #33b55a;
+  --cm-green-light: #7fd398;
+  --cm-warn: #e0911f;
+  --cm-danger: #e5484d;
+
+  /* easings */
+  --cm-e-std: cubic-bezier(0.2, 0, 0, 1);
+  --cm-e-dec: cubic-bezier(0.05, 0.7, 0.1, 1);
+  --cm-e-acc: cubic-bezier(0.3, 0, 0.8, 0.15);
+}
+
+/* ===================================================================
+ * C1 — Capture boundary (the headline)
+ * Breathing inner glow at the canvas edge while captured. Never
+ * obscures guest pixels: pure inset box-shadow on an overlay that
+ * sits inside the canvas wrapper with pointer-events:none.
+ * =================================================================== */
+.cm-capture {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  opacity: 0;
+  will-change: opacity, box-shadow;
+  /* fade-out on release */
+  transition: opacity 300ms var(--cm-e-acc);
+  box-shadow: inset 0 0 0 0 rgba(51, 181, 90, 0);
+}
+.cm-capture[data-captured='true'] {
+  opacity: 1;
+  transition: opacity 200ms var(--cm-e-dec);
+  animation: cmCaptureBreathe 3.2s var(--cm-e-std) infinite;
+}
+@keyframes cmCaptureBreathe {
+  0%,
+  100% {
+    box-shadow:
+      inset 0 0 10px 1px rgba(51, 181, 90, 0.35),
+      inset 0 0 2px 0 rgba(127, 211, 152, 0.45);
+  }
+  50% {
+    box-shadow:
+      inset 0 0 22px 3px rgba(51, 181, 90, 0.6),
+      inset 0 0 4px 1px rgba(127, 211, 152, 0.7);
+  }
+}
+
+/* ===================================================================
+ * C2 — Latency ring (titlebar). A small dot with an expanding ping
+ * ring. Cadence is set inline via --cm-ping-dur; colour via --cm-ping.
+ * =================================================================== */
+.cm-ring {
+  position: relative;
+  display: inline-flex;
+  width: 10px;
+  height: 10px;
+  vertical-align: middle;
+}
+.cm-ring__dot {
+  position: absolute;
+  inset: 2px;
+  border-radius: 50%;
+  background: var(--cm-ping, var(--cm-green));
+}
+.cm-ring__pulse {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px solid var(--cm-ping, var(--cm-green));
+  opacity: 0;
+  will-change: transform, opacity;
+  transform: scale(0.4);
+  animation: cmPing var(--cm-ping-dur, 1200ms) var(--cm-e-dec) infinite;
+}
+@keyframes cmPing {
+  0% {
+    transform: scale(0.4);
+    opacity: 0.7;
+  }
+  80%,
+  100% {
+    transform: scale(1.9);
+    opacity: 0;
+  }
+}
+
+/* ===================================================================
+ * C3 — Throughput stream. Faint particles drifting guest→host at a
+ * viewport edge. Each particle is a span the component spawns; the
+ * keyframe just carries it across + fades it. Direction/length via
+ * inline custom props.
+ * =================================================================== */
+.cm-stream {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.cm-stream__p {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: var(--cm-blue-light);
+  opacity: 0;
+  will-change: transform, opacity;
+  animation: cmStream var(--cm-p-dur, 1100ms) var(--cm-e-std) forwards;
+}
+@keyframes cmStream {
+  0% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.55;
+  }
+  88% {
+    opacity: 0.4;
+  }
+  100% {
+    transform: translate3d(var(--cm-p-dx, -40px), var(--cm-p-dy, 0), 0);
+    opacity: 0;
+  }
+}
+
+/* ===================================================================
+ * C4 — Signal bars (status strip). 4 wifi bars, staggered wave.
+ * Active count + colour set by the component on the root via class /
+ * data-attrs; the wave is opacity-only.
+ * =================================================================== */
+.cm-bars {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 12px;
+}
+.cm-bars__b {
+  width: 3px;
+  border-radius: 1px;
+  background: var(--cm-bar, var(--cm-green));
+  opacity: 0.25;
+  transform-origin: bottom center;
+  will-change: opacity, transform;
+}
+.cm-bars__b[data-on='true'] {
+  opacity: 0.85;
+  animation: cmBarWave 1.4s var(--cm-e-std) infinite;
+  animation-delay: calc(var(--cm-bar-i, 0) * 0.12s);
+}
+.cm-bars__b:nth-child(1) {
+  height: 4px;
+}
+.cm-bars__b:nth-child(2) {
+  height: 7px;
+}
+.cm-bars__b:nth-child(3) {
+  height: 10px;
+}
+.cm-bars__b:nth-child(4) {
+  height: 12px;
+}
+@keyframes cmBarWave {
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: scaleY(0.85);
+  }
+  50% {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+}
+
+/* ===================================================================
+ * C5 — Cursor handoff. A small morph ring drawn at the boundary
+ * crossing point. The component positions a span at (x,y); the
+ * keyframe expands+fades it once.
+ * =================================================================== */
+.cm-handoff {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  margin: -7px 0 0 -7px;
+  border-radius: 50%;
+  border: 1.5px solid var(--cm-blue-light);
+  pointer-events: none;
+  opacity: 0;
+  will-change: transform, opacity;
+  animation: cmHandoff 360ms var(--cm-e-dec) forwards;
+}
+@keyframes cmHandoff {
+  0% {
+    transform: scale(0.3);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+
+/* ===================================================================
+ * C6 — Keystroke ripple. Spawned span at a forwarded key's coords.
+ * =================================================================== */
+.cm-key {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  margin: -4px 0 0 -4px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(79, 147, 240, 0.5), rgba(79, 147, 240, 0));
+  pointer-events: none;
+  opacity: 0;
+  will-change: transform, opacity;
+  animation: cmKey 420ms var(--cm-e-dec) forwards;
+}
+@keyframes cmKey {
+  0% {
+    transform: scale(0.4);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+
+/* ===================================================================
+ * C7 — Remote cursors (presence). Each peer cursor glides via
+ * transform (set inline by the component); label fades in.
+ * =================================================================== */
+.cm-peer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  will-change: transform;
+  transition: transform 120ms linear;
+}
+.cm-peer__label {
+  position: absolute;
+  top: 14px;
+  left: 10px;
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 10px;
+  white-space: nowrap;
+  color: #fff;
+  opacity: 0;
+  animation: cmPeerIn 200ms var(--cm-e-dec) forwards;
+}
+@keyframes cmPeerIn {
+  to {
+    opacity: 0.9;
+  }
+}
+
+/* ===================================================================
+ * C8 — Reconnect sweep. Amber scanline travelling top→bottom + tag.
+ * =================================================================== */
+.cm-sweep {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.cm-sweep__line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  top: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(224, 145, 31, 0),
+    rgba(224, 145, 31, 0.85),
+    rgba(224, 145, 31, 0)
+  );
+  will-change: transform, opacity;
+  animation: cmSweep 1.6s var(--cm-e-std) infinite;
+}
+@keyframes cmSweep {
+  0% {
+    transform: translateY(-4px);
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh);
+    opacity: 0;
+  }
+}
+.cm-sweep__tag {
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-family: 'JetBrains Mono', monospace;
+  color: #fff;
+  background: rgba(224, 145, 31, 0.18);
+  border: 1px solid rgba(224, 145, 31, 0.5);
+  opacity: 0;
+  animation: cmTagIn 240ms var(--cm-e-dec) forwards;
+}
+@keyframes cmTagIn {
+  to {
+    opacity: 1;
+  }
+}
+
+/* ===================================================================
+ * C9 — Clipboard flash. Brief translucent blue radial bloom.
+ * =================================================================== */
+.cm-flash {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    circle at center,
+    rgba(31, 111, 229, 0.22),
+    rgba(31, 111, 229, 0) 60%
+  );
+  opacity: 0;
+  will-change: opacity;
+  animation: cmFlash 520ms var(--cm-e-dec);
+}
+@keyframes cmFlash {
+  0% {
+    opacity: 0;
+  }
+  18% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* ===================================================================
+ * C10 — Connect flip. One-time 3D rotateY edge→full-bleed.
+ * =================================================================== */
+.cm-flip {
+  transform-origin: left center;
+  backface-visibility: hidden;
+  will-change: transform, opacity;
+  animation: cmFlip 560ms var(--cm-e-dec);
+}
+@keyframes cmFlip {
+  0% {
+    transform: perspective(1200px) rotateY(-22deg) scale(0.94);
+    opacity: 0.2;
+  }
+  100% {
+    transform: perspective(1200px) rotateY(0deg) scale(1);
+    opacity: 1;
+  }
+}
+
+/* ===================================================================
+ * C11 — Idle tilt. Slow parallax tilt while idle/backgrounded preview.
+ * Helper toggles this class; transform-only.
+ * =================================================================== */
+.cm-tilt {
+  will-change: transform;
+  animation: cmTilt 9s var(--cm-e-std) infinite;
+}
+@keyframes cmTilt {
+  0%,
+  100% {
+    transform: perspective(1400px) rotateX(0.6deg) rotateY(-0.8deg);
+  }
+  50% {
+    transform: perspective(1400px) rotateX(-0.6deg) rotateY(0.8deg);
+  }
+}
+
+/* ===================================================================
+ * C12 — Fullscreen / background morph. Quick scale+fade applied when
+ * the window is backgrounded (helper toggles the class).
+ * =================================================================== */
+.cm-morph {
+  will-change: transform, opacity;
+  animation: cmMorph 360ms var(--cm-e-dec) forwards;
+}
+@keyframes cmMorph {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.985);
+    opacity: 0.72;
+  }
+}
+
+/* ===================================================================
+ * HARD GATE — prefers-reduced-motion. Collapse every animation above
+ * to a static end-state. Glows/rings become static, flips/morphs
+ * instant, particle/sweep/ripple/tilt killed. The components also
+ * skip spawning particles via the hook flag, but this guarantees the
+ * static result even if a stray element renders.
+ * =================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  .cm-root *,
+  .cm-capture,
+  .cm-ring__pulse,
+  .cm-stream__p,
+  .cm-bars__b[data-on='true'],
+  .cm-handoff,
+  .cm-key,
+  .cm-peer,
+  .cm-peer__label,
+  .cm-sweep__line,
+  .cm-sweep__tag,
+  .cm-flash,
+  .cm-flip,
+  .cm-tilt,
+  .cm-morph {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  /* C1: static glow, no breathing. */
+  .cm-capture {
+    opacity: 0;
+  }
+  .cm-capture[data-captured='true'] {
+    opacity: 1;
+    box-shadow:
+      inset 0 0 14px 2px rgba(51, 181, 90, 0.45),
+      inset 0 0 3px 0 rgba(127, 211, 152, 0.55);
+  }
+
+  /* C2: static ring, no ping. */
+  .cm-ring__pulse {
+    transform: scale(1);
+    opacity: 0.35;
+  }
+
+  /* C3: no particles at all. */
+  .cm-stream__p {
+    display: none;
+  }
+
+  /* C4: static full bars, no wave. */
+  .cm-bars__b {
+    opacity: 0.3;
+    transform: none;
+  }
+  .cm-bars__b[data-on='true'] {
+    opacity: 0.9;
+    transform: none;
+  }
+
+  /* C5/C6/C7: morphs/ripples/peer-in shown at rest. */
+  .cm-handoff,
+  .cm-key {
+    display: none;
+  }
+  .cm-peer__label {
+    opacity: 0.9;
+  }
+
+  /* C8: static tag, no sweepline. */
+  .cm-sweep__line {
+    display: none;
+  }
+  .cm-sweep__tag {
+    opacity: 1;
+  }
+
+  /* C9: no bloom. */
+  .cm-flash {
+    display: none;
+  }
+
+  /* C10/C11/C12: instant / at-rest. */
+  .cm-flip {
+    transform: none;
+    opacity: 1;
+  }
+  .cm-tilt {
+    transform: none;
+  }
+  .cm-morph {
+    transform: none;
+    opacity: 1;
+  }
+}

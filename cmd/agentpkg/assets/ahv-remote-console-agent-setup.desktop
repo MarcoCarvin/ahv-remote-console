@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=AHV Remote Console Agent Setup
+Comment=Enable clipboard sync between this VM and AHV Remote Console
+Exec=/usr/bin/ahv-remote-console-agent --setup
+Icon=ahv-remote-console-agent
+Terminal=false
+Categories=System;Settings;
+Keywords=clipboard;ahv;nutanix;console;

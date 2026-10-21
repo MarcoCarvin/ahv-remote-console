@@ -1,0 +1,40 @@
+packages:
+  - 'apps/desktop'
+  - 'packages/*'
+
+# pnpm 10+ moved many settings out of .npmrc and the package.json#pnpm field.
+# These belong in the workspace file now.
+nodeLinker: isolated
+strictPeerDependencies: false
+autoInstallPeers: true
+preferWorkspacePackages: true
+
+peerDependencyRules:
+  ignoreMissing:
+    - '@types/react'
+    - '@types/react-dom'
+
+# Security override: electron-updater still resolves js-yaml in the vulnerable
+# 4.0.0–4.2.x range (GHSA-52cp-r559-cp3m — merge-key quadratic CPU). Force the
+# patched line; 4.3.x is API-compatible with 4.1.x. Scoped so a js-yaml 3.x used
+# elsewhere is untouched.
+overrides:
+  'js-yaml@>=4.0.0 <4.3.0': '^4.3.0'
+
+# pnpm 11 quarantines very-recent releases by default ("minimum release age").
+# We explicitly opt these packages in because we have pinned the latest May 2026
+# versions intentionally.
+minimumReleaseAgeExclude:
+  - '@types/node@25.9.1'
+  - '@types/react@19.2.15'
+  - electron@42.2.0
+
+# Build scripts to allow. pnpm 11 sandboxes them by default; this list opts in
+# only the ones our packaging pipeline genuinely needs.
+allowBuilds:
+  electron: true
+  electron-winstaller: true
+  esbuild: true
+  '@parcel/watcher': true
+  husky: true
+  sharp: true

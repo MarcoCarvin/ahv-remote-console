@@ -1,0 +1,31 @@
+{
+  "name": "@ahv-remote-console/native-keyhook",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Per-OS native keyboard grab (WH_KEYBOARD_LL / XGrabKeyboard) for VMware-style windowed keyboard auto-grab. Loaded only in the Electron main process.",
+  "author": "The AHV Remote Console Authors",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "integrity.js",
+    "integrity.json",
+    "binding.gyp",
+    "src",
+    "prebuilds"
+  ],
+  "scripts": {
+    "install": "node -e \"process.exit(0)\"",
+    "_comment": "No 'build' script ON PURPOSE: the repo's blanket `pnpm -r build` / `pnpm --filter ./packages/* build` would otherwise run prebuildify on toolchain-less runners. The prebuild is produced ONLY by the dedicated CI build:keyhook job via `build:native` (which also writes integrity.json).",
+    "build:native": "prebuildify --napi --strip --target node@22.0.0 && node scripts/gen-integrity.js",
+    "build:debug": "node-gyp rebuild --debug",
+    "rebuild": "node-gyp rebuild",
+    "test": "node --test"
+  },
+  "devDependencies": {
+    "node-addon-api": "^8.3.0",
+    "node-gyp": "^11.0.0",
+    "prebuildify": "^6.0.1"
+  }
+}

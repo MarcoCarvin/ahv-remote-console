@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!--
+      The Content-Security-Policy is delivered as an HTTP response header by
+      the Electron main process (see hardenSession in src/main/main.ts).
+      Headers are required for several directives (frame-ancestors, sandbox,
+      etc.) that a <meta> CSP cannot enforce, and the header lets us toggle a
+      relaxed dev profile for Vite's React Fast Refresh.
+    -->
+    <title>AHV Remote Console</title>
+    <!--
+      Boot splash. The main process shows the window on did-finish-load (NOT
+      ready-to-show — see createMainWindow), so the window becomes visible
+      BEFORE React's first paint. In dev the ESM module + web-font waterfall
+      delays that paint by seconds, which read as a frozen black window. This
+      static, dependency-free splash paints with the very first frame and is
+      removed by main.tsx once React commits — so the operator always sees a
+      branded loading state, never a black screen. style-src allows
+      'unsafe-inline' in both dev and prod CSP profiles.
+    -->
+    <style>
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        background: #0f1b2a;
+      }
+      #root {
+        height: 100%;
+      }
+      #boot-splash {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+        background: #0f1b2a;
+        color: #94a3b8;
+        font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+        transition: opacity 260ms ease;
+      }
+      #boot-splash .ring {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        border: 2px solid rgba(255, 255, 255, 0.14);
+        border-top-color: #1788d8;
+        animation: boot-spin 0.8s linear infinite;
+      }
+      #boot-splash .label {
+        font-size: 12px;
+        letter-spacing: 0.06em;
+      }
+      @keyframes boot-spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        #boot-splash .ring {
+          animation: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="boot-splash">
+      <div class="ring"></div>
+      <div class="label">AHV Remote Console</div>
+    </div>
+    <div id="root"></div>
+    <script type="module" src="./main.tsx"></script>
+  </body>
+</html>

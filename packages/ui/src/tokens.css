@@ -1,0 +1,158 @@
+/* AHV Remote Console design tokens — brand palette.
+   Dark-first; light tokens in [data-theme="light"].
+   prefers-color-scheme: dark also triggers dark mode. */
+:root,
+[data-theme='dark'] {
+  /* surfaces */
+  --hc-bg-0: #0f1b2a;
+  --hc-bg-1: #15263a;
+  --hc-bg-2: #1a3048;
+  --hc-bg-3: #1f3955;
+  --hc-bg-elev: rgba(255, 255, 255, 0.04);
+  --hc-bg-glass: rgba(15, 27, 42, 0.72);
+
+  /* text */
+  --hc-fg-0: #e8f1f8;
+  --hc-fg-1: #b8cfe0;
+  --hc-fg-2: #94a3b8;
+  --hc-fg-3: #64748b;
+
+  /* accents — brand blue */
+  --hc-accent-50: #e8f4fa;
+  --hc-accent-200: #b8d8e8;
+  --hc-accent-400: #1788d8;
+  --hc-accent-500: #0878c8;
+  --hc-accent-600: #1668a5;
+  --hc-accent-700: #054d8a;
+
+  /* status */
+  --hc-success: #689838;
+  --hc-warning: #d68a1f;
+  --hc-error: #c8102e;
+  --hc-info: #5ab0e8;
+
+  /* borders */
+  --hc-border-0: rgba(255, 255, 255, 0.06);
+  --hc-border-1: rgba(255, 255, 255, 0.12);
+  --hc-border-strong: rgba(255, 255, 255, 0.22);
+
+  /* radii */
+  --hc-radius-sm: 6px;
+  --hc-radius-md: 10px;
+  --hc-radius-lg: 12px;
+  --hc-radius-xl: 12px;
+
+  /* shadows */
+  --hc-shadow-soft: 0 4px 12px rgba(15, 34, 53, 0.3);
+  --hc-shadow-deep: 0 20px 60px -12px rgba(15, 34, 53, 0.5);
+  --hc-shadow-glow: 0 0 0 1px var(--hc-accent-500), 0 0 24px -4px rgba(8, 120, 200, 0.5);
+
+  /* motion (legacy tokens, kept for back-compat with existing components) */
+  --hc-motion-fast: 120ms;
+  --hc-motion-base: 220ms;
+  --hc-motion-slow: 360ms;
+  --hc-easing-emphasized: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --hc-easing-decelerated: cubic-bezier(0.2, 0.85, 0.4, 1);
+
+  /* v2 motion tokens (Material 3 spec, Apple-style emphasis curves).
+     Mirror of motion/tokens.ts. Use these for new components. */
+  --dur-short3: 150ms;   /* crossfade */
+  --dur-short4: 200ms;   /* exit */
+  --dur-medium2: 300ms;  /* enter */
+  --dur-medium4: 400ms;  /* shared element */
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);       /* default */
+  --ease-decel: cubic-bezier(0.05, 0.7, 0.1, 1);     /* entering — Linear-ish */
+  --ease-accel: cubic-bezier(0.3, 0, 0.8, 0.15);     /* exiting */
+
+  /* typography */
+  /* Brand sans is Jost (bundled via @fontsource). Kept as --hc-font-sans too
+     so the reset.css body default and older components inherit it. */
+  --hc-font-sans: 'Jost', system-ui, -apple-system, sans-serif;
+  --hc-font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+}
+
+[data-theme='light'] {
+  --hc-bg-0: #f6fafd;
+  --hc-bg-1: #ffffff;
+  --hc-bg-2: #e8f4fa;
+  --hc-bg-3: #dbe7f0;
+  --hc-bg-elev: rgba(15, 34, 53, 0.04);
+  --hc-bg-glass: rgba(255, 255, 255, 0.78);
+
+  --hc-fg-0: #0f2235;
+  --hc-fg-1: #1f3955;
+  --hc-fg-2: #475569;
+  --hc-fg-3: #94a3b8;
+
+  --hc-accent-400: #0878c8;
+  --hc-accent-500: #0878c8;
+
+  --hc-border-0: rgba(15, 34, 53, 0.08);
+  --hc-border-1: rgba(15, 34, 53, 0.16);
+  --hc-border-strong: rgba(15, 34, 53, 0.28);
+
+  --hc-shadow-soft: 0 4px 12px rgba(15, 34, 53, 0.08);
+  --hc-shadow-deep: 0 24px 60px -12px rgba(15, 34, 53, 0.18);
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-theme='auto'], :root:not([data-theme]) {
+    --hc-bg-0: #0f1b2a;
+    --hc-bg-1: #15263a;
+    --hc-bg-2: #1a3048;
+    --hc-bg-3: #1f3955;
+  }
+}
+
+/* ── Brand tool-grade tokens (connection manager) ───────────────────────────
+   The "Brand-true" connection-manager surface is a light, tool-grade skin:
+   color carries status only. These flat tokens are referenced by the
+   connection manager and the burst glyph (DotDiamond already reads --blue /
+   --green). Data is ALWAYS rendered in the mono face. */
+:root {
+  --sans: 'Jost', system-ui, -apple-system, sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  --blue: #0e76c4;
+  --blueD: #0a5ba0;
+  --blueTint: #e7f1fb;
+
+  --green: #6aa442;
+  --greenD: #557f33;
+  --greenTint: #eef4e6;
+
+  --amber: #cf8d1c;
+  --red: #cf4036;
+
+  --ink: #14283c;
+  --ink2: #4d6076;
+  --ink3: #8194a8;
+  --ink4: #aebccb;
+
+  --bg: #ffffff;
+  --soft: #f5f8fb;
+  --line: #e3eaf1;
+  --line2: #d3dde7;
+
+  /* Lobby + VM-Console redesign — additive spec tokens. The existing
+     --blue / --green / --ink families are reused as-is (so the already-shipped
+     connection-manager screens don't shift); these only fill the gaps the two
+     redesigned screens need. */
+  --blueDk: #0a4d80;
+  --blueL: #4aa3dc;
+  --bluePale: #cfe6f7;
+  --blueGhost: #f3f9fd;
+  --greenL: #8cc25e;
+  --paper: #ffffff;
+  --soft2: #edf3f9;
+  --rule: #e4ecf3;
+  --rule2: #d5e1ec;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --hc-motion-fast: 0ms;
+    --hc-motion-base: 0ms;
+    --hc-motion-slow: 0ms;
+  }
+}

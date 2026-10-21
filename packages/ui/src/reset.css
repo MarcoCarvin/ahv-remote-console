@@ -1,0 +1,91 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: var(--hc-bg-0);
+  color: var(--hc-fg-0);
+  font-family: var(--hc-font-sans);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+/* Global keyboard focus ring: every interactive element gets a visible ring
+   on keyboard focus (not mouse/touch, via :focus-visible). Components that
+   render their own ring opt out by adding the .no-focus-ring class. */
+:focus-visible {
+  outline: 2px solid var(--hc-accent-400);
+  outline-offset: 2px;
+  border-radius: var(--hc-radius-sm, 4px);
+}
+
+.no-focus-ring:focus-visible {
+  outline: none;
+}
+
+input,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+a {
+  color: var(--hc-accent-400);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+img,
+canvas {
+  display: block;
+  max-width: 100%;
+}
+
+::selection {
+  background: var(--hc-accent-500);
+  color: #fff;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--hc-border-1);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--hc-border-strong);
+  background-clip: padding-box;
+}

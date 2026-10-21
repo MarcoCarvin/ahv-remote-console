@@ -1,0 +1,13 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "tsBuildInfoFile": ".tsbuildinfo",
+    "composite": true,
+    "lib": ["ES2022", "DOM"]
+  },
+  "references": [{ "path": "../protocol" }],
+  "include": ["src/**/*"],
+  "exclude": ["dist", "node_modules"]
+}

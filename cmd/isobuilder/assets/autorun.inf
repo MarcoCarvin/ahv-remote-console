@@ -1,0 +1,4 @@
+[autorun]
+open=ahv-remote-console-agent.exe
+icon=ahv-remote-console-agent.exe,0
+label=AHV Remote Console

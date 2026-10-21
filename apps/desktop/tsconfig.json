@@ -1,0 +1,31 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "tsBuildInfoFile": ".tsbuildinfo",
+    "types": ["node", "electron"],
+    "composite": true,
+    "noEmit": true
+  },
+  "references": [
+    { "path": "../../packages/protocol" },
+    { "path": "../../packages/sdk" },
+    { "path": "../../packages/telemetry" },
+    { "path": "../../packages/ui" }
+  ],
+  "include": ["src/**/*"],
+  "exclude": [
+    "dist",
+    "node_modules",
+    "release",
+    "e2e",
+    "playwright.config.ts",
+    "playwright-report",
+    "test-results"
+  ]
+}

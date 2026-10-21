@@ -1,0 +1,101 @@
+name: security
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: '0 5 * * 1'
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  codeql:
+    name: codeql
+    runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [javascript-typescript, go]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
+      - uses: github/codeql-action/autobuild@v3
+      - uses: github/codeql-action/analyze@v3
+
+  # gosec, govulncheck, and npm-audit are MERGE BLOCKING on HIGH+
+  # findings. Previously gosec was `|| true` and npm-audit was
+  # continue-on-error: true (info-only). The May 2026 cleanup tightens
+  # them: HIGH+ findings now fail the workflow.
+
+  gosec:
+    name: gosec
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.25'
+      - run: |
+          # RELE-05: pin gosec so a silent upstream release can't change
+          # security results (or ship a compromised @latest) between runs.
+          go install github.com/securego/gosec/v2/cmd/gosec@v2.22.7
+          # -severity high → exit non-zero on HIGH findings.
+          gosec -severity=high -fmt=sarif -out=gosec.sarif ./apps/runtime/... ./plugins/ahv/...
+      - uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: gosec.sarif
+
+  govulncheck:
+    name: govulncheck
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.25'
+      - run: |
+          # RELE-05: pin govulncheck to a fixed version (the vuln DB is fetched
+          # at runtime regardless, so detections stay current; the tool binary
+          # itself is now reproducible).
+          go install golang.org/x/vuln/cmd/govulncheck@v1.1.4
+          # No `|| true` — a vulnerability in our import graph fails
+          # the workflow. Whitelist via govulncheck.yaml if needed.
+          (cd apps/runtime && govulncheck ./...)
+          (cd plugins/ahv && govulncheck ./...)
+
+  npm-audit:
+    name: npm-audit
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.1.3
+      - run: pnpm install --frozen-lockfile
+      # continue-on-error removed — HIGH+ npm audit findings now block.
+      - run: pnpm audit --prod --audit-level=high
+
+  sbom:
+    name: sbom
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: anchore/sbom-action@v0
+        with:
+          format: cyclonedx-json
+          output-file: ahv-remote-console.sbom.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sbom
+          path: ahv-remote-console.sbom.json
+          retention-days: 90

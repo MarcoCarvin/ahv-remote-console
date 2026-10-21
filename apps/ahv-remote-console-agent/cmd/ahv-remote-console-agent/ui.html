@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AHV Remote Console — Guest Agent</title>
+<style>
+  /* Palette + type lifted from the platform app (packages/ui/src/tokens.css)
+     so the installer IS the same design language, not an approximation. */
+  :root{
+    --blue:#0e76c4; --blueD:#0a5ba0; --blueDk:#0a4d80; --blueL:#4aa3dc;
+    --bluePale:#cfe6f7; --blueTint:#e7f1fb; --blueGhost:#f3f9fd;
+    --ink:#14283c; --ink2:#4d6076; --ink3:#8194a8;
+    --paper:#ffffff; --soft:#f5f8fb; --line:#e3eaf1;
+    --green:#6aa442; --red:#cf4036;
+    --sans:'Jost', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; height:100%; }
+  body{
+    font-family:var(--sans); color:var(--ink); background:var(--paper);
+    display:flex; height:100vh; overflow:hidden; user-select:none; cursor:default;
+    -webkit-font-smoothing:antialiased;
+  }
+  .spine{ flex:0 0 14px; background:linear-gradient(180deg,var(--blueL),var(--blue) 42%,var(--blueDk)); }
+  .stage{
+    flex:1; display:flex; flex-direction:column; padding:34px 42px 26px;
+    background:radial-gradient(135% 110% at 0% 0%, var(--blueGhost), var(--paper) 56%);
+  }
+
+  /* brand lockup with orbiting spark (the app's connection-hero motif) */
+  .brand{ display:flex; align-items:center; gap:14px; }
+  .mark{ position:relative; width:46px; height:46px; flex:0 0 46px; display:grid; place-items:center; }
+  .mark .ring{ position:absolute; border-radius:50%; border:1.5px solid var(--bluePale); }
+  .mark .ring.r1{ inset:0; animation:spin 9s linear infinite; border-top-color:var(--blueL); }
+  .mark .ring.r2{ inset:7px; animation:spin 6s linear infinite reverse; border-right-color:var(--blueL); }
+  .mark svg{ width:26px; height:26px; display:block; }
+  .word{ display:flex; flex-direction:column; line-height:1.16; }
+  .vendor{ font-size:12px; letter-spacing:.24em; font-weight:600; color:var(--blue); text-transform:uppercase; }
+  .product{ font-size:13px; font-weight:600; color:var(--ink2); }
+
+  h1{ font-size:24px; font-weight:600; margin:30px 0 8px; letter-spacing:.01em; }
+  p.sub{ font-size:14px; color:var(--ink2); margin:0; max-width:460px; line-height:1.55; }
+
+  /* step list */
+  .steps{ margin-top:26px; display:flex; flex-direction:column; gap:14px; }
+  .step{ display:flex; align-items:center; gap:13px; font-size:14px; color:var(--ink3); transition:color .25s; }
+  .step .dot{ width:22px; height:22px; flex:0 0 22px; border-radius:50%; border:2px solid var(--line); display:grid; place-items:center; transition:.25s; }
+  .step .dot svg{ width:12px; height:12px; opacity:0; transition:opacity .2s; }
+  .step.active{ color:var(--ink); font-weight:600; }
+  .step.active .dot{ border-color:var(--blue); border-top-color:transparent; animation:spin .8s linear infinite; }
+  .step.done{ color:var(--ink2); }
+  .step.done .dot{ border-color:var(--green); background:var(--green); animation:none; }
+  .step.done .dot svg{ opacity:1; }
+
+  .actions{ margin-top:auto; display:flex; gap:10px; justify-content:flex-end; opacity:0; transform:translateY(6px); transition:.25s; pointer-events:none; }
+  .actions.show{ opacity:1; transform:none; pointer-events:auto; }
+  button{
+    font-family:var(--sans); font-size:13.5px; font-weight:600; padding:10px 20px;
+    border-radius:8px; cursor:pointer; border:1px solid var(--line);
+    background:var(--paper); color:var(--ink2); transition:background .15s,border-color .15s;
+  }
+  button:hover{ background:var(--soft); }
+  button.primary{ background:var(--blue); border-color:var(--blue); color:#fff; }
+  button.primary:hover{ background:var(--blueD); }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+  .err h1{ color:var(--red); }
+</style>
+</head>
+<body>
+  <div class="spine"></div>
+  <div class="stage" id="stage">
+    <div class="brand">
+      <div class="mark">
+        <div class="ring r1"></div>
+        <div class="ring r2"></div>
+        <!-- the brand spark (components/clusterShared.tsx Spark), brand blue -->
+        <svg viewBox="0 0 100 100" aria-hidden="true">
+          <g stroke="#0e76c4" stroke-width="7" stroke-linecap="round">
+            <line x1="50" y1="9" x2="50" y2="33"/><line x1="50" y1="67" x2="50" y2="91"/>
+            <line x1="9" y1="50" x2="33" y2="50"/><line x1="67" y1="50" x2="91" y2="50"/>
+            <line x1="21" y1="21" x2="38.5" y2="38.5"/><line x1="61.5" y1="61.5" x2="79" y2="79"/>
+            <line x1="79" y1="21" x2="61.5" y2="38.5"/><line x1="38.5" y1="61.5" x2="21" y2="79"/>
+          </g>
+          <rect x="41" y="41" width="18" height="18" rx="2" transform="rotate(45 50 50)" fill="#0e76c4"/>
+        </svg>
+      </div>
+      <div class="word">
+        <span class="vendor">Guest Agent</span>
+        <span class="product">AHV Remote Console</span>
+      </div>
+    </div>
+
+    <h1 id="title">Setting up the Guest Agent</h1>
+    <p class="sub" id="sub">This won't take long — keep this window open until it finishes.</p>
+
+    <div class="steps" id="steps">
+      <div class="step" data-i="0"><span class="dot">CHK</span><span>Preparing this VM</span></div>
+      <div class="step" data-i="1"><span class="dot">CHK</span><span>Enabling clipboard</span></div>
+      <div class="step" data-i="2"><span class="dot">CHK</span><span>Finishing setup</span></div>
+    </div>
+
+    <div class="actions" id="actions">
+      <button id="closeBtn" onclick="goClose()">Close</button>
+      <button id="rebootBtn" class="primary" onclick="goReboot()">Restart now</button>
+    </div>
+  </div>
+
+  <script>
+    // Replace the CHK placeholders with a real check glyph.
+    document.querySelectorAll('.dot').forEach(function(d){
+      d.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
+    });
+
+    var ORDER = ['prepare','clipboard','finishing','done'];
+    function activeIndex(key){ return { prepare:0, clipboard:1, finishing:2, done:3 }[key]; }
+
+    // Go calls window.__phase('prepare'|'clipboard'|'finishing'|'done').
+    // For 'done' it passes needsReboot: false means the VM is already at the
+    // standard layout, so the restart prompt is suppressed. The display change
+    // is intentionally never named here.
+    window.__phase = function(key, needsReboot){
+      var idx = activeIndex(key);
+      document.querySelectorAll('.step').forEach(function(el){
+        var i = parseInt(el.getAttribute('data-i'), 10);
+        el.classList.toggle('done', i < idx);
+        el.classList.toggle('active', i === idx);
+      });
+      if(key === 'done'){
+        document.getElementById('title').textContent = 'All set';
+        if(needsReboot === false){
+          document.getElementById('sub').textContent = 'The clipboard is ready on this VM. You can close this window.';
+          document.getElementById('rebootBtn').style.display = 'none';
+        } else {
+          document.getElementById('sub').textContent = 'The clipboard is ready on this VM. Restart now to finish, or close this window.';
+        }
+        document.getElementById('actions').classList.add('show');
+      }
+    };
+
+    window.__error = function(msg){
+      document.getElementById('stage').classList.add('err');
+      document.querySelectorAll('.step.active').forEach(function(el){ el.classList.remove('active'); });
+      document.getElementById('title').textContent = 'Setup did not complete';
+      document.getElementById('sub').textContent = (msg || 'Setup could not complete.') + ' You can close this window and try again, or contact your administrator.';
+      var a = document.getElementById('actions');
+      document.getElementById('rebootBtn').style.display = 'none';
+      a.classList.add('show');
+    };
+
+    window.addEventListener('DOMContentLoaded', function(){
+      if(window.goStartSetup) window.goStartSetup();
+    });
+  </script>
+</body>
+</html>
