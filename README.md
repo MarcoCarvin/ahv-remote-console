@@ -115,7 +115,7 @@ See the [architecture overview](docs/architecture/overview.md) for the full pict
   installers.
 - For clipboard sync only: the host module on the AHV hosts, and the guest agent in a
   Windows or Linux guest. See [What you install](#what-you-install).
-- To build from source: Go 1.25 or later, Node 24 or later, and pnpm 11 or later.
+- To build from source: Go 1.26 or later, Node 24 or later, and pnpm 11 or later.
 
 Known limits of the AHV console itself:
 

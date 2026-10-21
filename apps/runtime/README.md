@@ -62,7 +62,7 @@ go test -race -run <TestName> ./apps/runtime/internal/proxy/...
 
 `make -C apps/runtime dev` runs `go run` with debug text logging. It passes no IPC secret flag, so the runtime exits unless you add one. The desktop app's `pnpm dev` starts the runtime for you.
 
-The build stamps version, commit and date into `internal/build` through `-ldflags`. The repository is one Go module with no per-app `go.mod`. `go.mod` pins the toolchain to `go1.25.12`.
+The build stamps version, commit and date into `internal/build` through `-ldflags`. The repository is one Go module with no per-app `go.mod`. `go.mod` pins the toolchain to `go1.26.10`.
 
 ## Structure
 

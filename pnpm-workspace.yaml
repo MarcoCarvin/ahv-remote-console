@@ -14,12 +14,16 @@ peerDependencyRules:
     - '@types/react'
     - '@types/react-dom'
 
-# Security override: electron-updater still resolves js-yaml in the vulnerable
-# 4.0.0–4.2.x range (GHSA-52cp-r559-cp3m — merge-key quadratic CPU). Force the
-# patched line; 4.3.x is API-compatible with 4.1.x. Scoped so a js-yaml 3.x used
-# elsewhere is untouched.
+# Security override: electron-updater resolves a js-yaml 4.x release with known
+# advisories about CPU use on crafted YAML. Force 4.3.2 or later, which is
+# API-compatible with 4.1.x. Scoped so a js-yaml 3.x used elsewhere is untouched.
 overrides:
-  'js-yaml@>=4.0.0 <4.3.0': '^4.3.0'
+  'js-yaml@>=4.0.0 <4.3.2': '^4.3.2'
+
+# Run package scripts through pnpm's cross-platform shell, so scripts such as
+# `NODE_ENV=production vite build` also work on Windows, where pnpm would
+# otherwise use cmd.exe.
+shellEmulator: true
 
 # pnpm 11 quarantines very-recent releases by default ("minimum release age").
 # We explicitly opt these packages in because we have pinned the latest May 2026

@@ -8,7 +8,7 @@ components listed below, each governed by its own license (reproduced in the
 "License texts" section). This satisfies the attribution obligation referenced
 in clause 3 of [`LICENSE`](./LICENSE).
 
-Components: **40**. The in-guest agent links
+Components: **41**. The in-guest agent links
 `golang.org/x/sys` (the `unix` package on
 Linux, the `windows` package on Windows) plus the platform credential/D-Bus
 backends those pull in; its third-party components are enumerated above,
@@ -27,8 +27,8 @@ tool and is not distributed — it contributes no third-party components.
 |---|---|---|---|
 | github.com/jchv/go-webview2 | v0.0.0-20260205173254-56598839c808 | MIT | https://github.com/jchv/go-webview2/blob/56598839c808/LICENSE |
 | github.com/jchv/go-winloader | v0.0.0-20250406163304-c1995be93bd1 | ISC | https://github.com/jchv/go-winloader/blob/c1995be93bd1/LICENSE.md |
-| golang.org/x/sys/unix | v0.44.0 | BSD-3-Clause | https://cs.opensource.google/go/x/sys/+/v0.44.0:LICENSE |
-| golang.org/x/sys/windows | v0.44.0 | BSD-3-Clause | https://cs.opensource.google/go/x/sys/+/v0.44.0:LICENSE |
+| golang.org/x/sys/unix | v0.48.0 | BSD-3-Clause | https://cs.opensource.google/go/x/sys/+/v0.48.0:LICENSE |
+| golang.org/x/sys/windows | v0.48.0 | BSD-3-Clause | https://cs.opensource.google/go/x/sys/+/v0.48.0:LICENSE |
 
 ## Go — runtime broker binary
 
@@ -37,30 +37,31 @@ tool and is not distributed — it contributes no third-party components.
 | github.com/cenkalti/backoff/v5 | v5.0.3 | MIT | https://github.com/cenkalti/backoff/blob/v5.0.3/LICENSE |
 | github.com/cespare/xxhash/v2 | v2.3.0 | MIT | https://github.com/cespare/xxhash/blob/v2.3.0/LICENSE.txt |
 | github.com/danieljoos/wincred | v1.2.3 | MIT | https://github.com/danieljoos/wincred/blob/v1.2.3/LICENSE |
-| github.com/go-logr/logr | v1.4.3 | Apache-2.0 | https://github.com/go-logr/logr/blob/v1.4.3/LICENSE |
+| github.com/go-logr/logr | v1.4.4 | Apache-2.0 | https://github.com/go-logr/logr/blob/v1.4.4/LICENSE |
 | github.com/go-logr/stdr | v1.2.2 | Apache-2.0 | https://github.com/go-logr/stdr/blob/v1.2.2/LICENSE |
 | github.com/godbus/dbus/v5 | v5.2.2 | BSD-2-Clause | https://github.com/godbus/dbus/blob/v5.2.2/LICENSE |
 | github.com/google/uuid | v1.6.0 | BSD-3-Clause | https://github.com/google/uuid/blob/v1.6.0/LICENSE |
 | github.com/gorilla/websocket | v1.5.3 | BSD-2-Clause | https://github.com/gorilla/websocket/blob/v1.5.3/LICENSE |
-| github.com/grpc-ecosystem/grpc-gateway/v2 | v2.28.0 | BSD-3-Clause | https://github.com/grpc-ecosystem/grpc-gateway/blob/v2.28.0/LICENSE |
+| github.com/grpc-ecosystem/grpc-gateway/v2 | v2.30.0 | BSD-3-Clause | https://github.com/grpc-ecosystem/grpc-gateway/blob/v2.30.0/LICENSE |
 | github.com/zalando/go-keyring | v0.2.8 | MIT | https://github.com/zalando/go-keyring/blob/v0.2.8/LICENSE |
 | github.com/zalando/go-keyring/internal/shellescape | v0.2.8 | MIT | https://github.com/zalando/go-keyring/blob/v0.2.8/internal/shellescape/LICENSE |
 | go.opentelemetry.io/auto/sdk | v1.2.1 | Apache-2.0 | https://github.com/open-telemetry/opentelemetry-go-instrumentation/blob/sdk/v1.2.1/sdk/LICENSE |
-| go.opentelemetry.io/otel | v1.43.0 | Apache-2.0 | https://github.com/open-telemetry/opentelemetry-go/blob/v1.43.0/LICENSE |
-| go.opentelemetry.io/otel/exporters/otlp/otlptrace | v1.43.0 | Apache-2.0 | https://github.com/open-telemetry/opentelemetry-go/blob/exporters/otlp/otlptrace/v1.43.0/exporters/otlp/otlptrace/LICENSE |
-| go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp | v1.43.0 | Apache-2.0 | https://github.com/open-telemetry/opentelemetry-go/blob/exporters/otlp/otlptrace/otlptracehttp/v1.43.0/exporters/otlp/otlptrace/otlptracehttp/LICENSE |
-| go.opentelemetry.io/otel/metric | v1.43.0 | Apache-2.0 | https://github.com/open-telemetry/opentelemetry-go/blob/metric/v1.43.0/metric/LICENSE |
-| go.opentelemetry.io/otel/sdk | v1.43.0 | Apache-2.0 | https://github.com/open-telemetry/opentelemetry-go/blob/sdk/v1.43.0/sdk/LICENSE |
-| go.opentelemetry.io/otel/trace | v1.43.0 | Apache-2.0 | https://github.com/open-telemetry/opentelemetry-go/blob/trace/v1.43.0/trace/LICENSE |
-| go.opentelemetry.io/proto/otlp | v1.10.0 | Apache-2.0 | https://github.com/open-telemetry/opentelemetry-proto-go/blob/otlp/v1.10.0/otlp/LICENSE |
-| golang.org/x/net | v0.53.0 | BSD-3-Clause | https://cs.opensource.google/go/x/net/+/v0.53.0:LICENSE |
-| golang.org/x/sys/unix | v0.44.0 | BSD-3-Clause | https://cs.opensource.google/go/x/sys/+/v0.44.0:LICENSE |
-| golang.org/x/sys/windows | v0.44.0 | BSD-3-Clause | https://cs.opensource.google/go/x/sys/+/v0.44.0:LICENSE |
-| golang.org/x/text | v0.37.0 | BSD-3-Clause | https://cs.opensource.google/go/x/text/+/v0.37.0:LICENSE |
-| google.golang.org/genproto/googleapis/api/httpbody | v0.0.0-20260414002931-afd174a4e478 | Apache-2.0 | https://github.com/googleapis/go-genproto/blob/afd174a4e478/googleapis/api/LICENSE |
-| google.golang.org/genproto/googleapis/rpc/status | v0.0.0-20260414002931-afd174a4e478 | Apache-2.0 | https://github.com/googleapis/go-genproto/blob/afd174a4e478/googleapis/rpc/LICENSE |
-| google.golang.org/grpc | v1.82.1 | Apache-2.0 | https://github.com/grpc/grpc-go/blob/v1.82.1/LICENSE |
-| google.golang.org/protobuf | v1.36.11 | BSD-3-Clause | https://github.com/protocolbuffers/protobuf-go/blob/v1.36.11/LICENSE |
+| go.opentelemetry.io/otel | v1.47.0 | Apache-2.0 | https://github.com/open-telemetry/opentelemetry-go/blob/v1.47.0/LICENSE |
+| go.opentelemetry.io/otel/exporters/otlp/otlptrace | v1.47.0 | Apache-2.0 | https://github.com/open-telemetry/opentelemetry-go/blob/exporters/otlp/otlptrace/v1.47.0/exporters/otlp/otlptrace/LICENSE |
+| go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp | v1.47.0 | Apache-2.0 | https://github.com/open-telemetry/opentelemetry-go/blob/exporters/otlp/otlptrace/otlptracehttp/v1.47.0/exporters/otlp/otlptrace/otlptracehttp/LICENSE |
+| go.opentelemetry.io/otel/log | v1.47.0 | Apache-2.0 | https://github.com/open-telemetry/opentelemetry-go/blob/log/v1.47.0/log/LICENSE |
+| go.opentelemetry.io/otel/metric | v1.47.0 | Apache-2.0 | https://github.com/open-telemetry/opentelemetry-go/blob/metric/v1.47.0/metric/LICENSE |
+| go.opentelemetry.io/otel/sdk | v1.47.0 | Apache-2.0 | https://github.com/open-telemetry/opentelemetry-go/blob/sdk/v1.47.0/sdk/LICENSE |
+| go.opentelemetry.io/otel/trace | v1.47.0 | Apache-2.0 | https://github.com/open-telemetry/opentelemetry-go/blob/trace/v1.47.0/trace/LICENSE |
+| go.opentelemetry.io/proto/otlp | v1.11.0 | Apache-2.0 | https://github.com/open-telemetry/opentelemetry-proto-go/blob/otlp/v1.11.0/otlp/LICENSE |
+| golang.org/x/net | v0.60.0 | BSD-3-Clause | https://cs.opensource.google/go/x/net/+/v0.60.0:LICENSE |
+| golang.org/x/sys/unix | v0.48.0 | BSD-3-Clause | https://cs.opensource.google/go/x/sys/+/v0.48.0:LICENSE |
+| golang.org/x/sys/windows | v0.48.0 | BSD-3-Clause | https://cs.opensource.google/go/x/sys/+/v0.48.0:LICENSE |
+| golang.org/x/text | v0.42.0 | BSD-3-Clause | https://cs.opensource.google/go/x/text/+/v0.42.0:LICENSE |
+| google.golang.org/genproto/googleapis/api/httpbody | v0.0.0-20260928230214-8a89bd6388cc | Apache-2.0 | https://github.com/googleapis/go-genproto/blob/8a89bd6388cc/googleapis/api/LICENSE |
+| google.golang.org/genproto/googleapis/rpc/status | v0.0.0-20260928230214-8a89bd6388cc | Apache-2.0 | https://github.com/googleapis/go-genproto/blob/8a89bd6388cc/googleapis/rpc/LICENSE |
+| google.golang.org/grpc | v1.83.2 | Apache-2.0 | https://github.com/grpc/grpc-go/blob/v1.83.2/LICENSE |
+| google.golang.org/protobuf | v1.36.12 | BSD-3-Clause | https://github.com/protocolbuffers/protobuf-go/blob/v1.36.12/LICENSE |
 
 ## JavaScript — desktop app bundle
 
@@ -155,7 +156,7 @@ THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH RE
 </details>
 
 <details>
-<summary>Applies to: golang.org/x/sys/unix@v0.44.0, golang.org/x/sys/windows@v0.44.0, golang.org/x/net@v0.53.0, golang.org/x/sys/unix@v0.44.0, golang.org/x/sys/windows@v0.44.0, golang.org/x/text@v0.37.0</summary>
+<summary>Applies to: golang.org/x/sys/unix@v0.48.0, golang.org/x/sys/windows@v0.48.0, golang.org/x/net@v0.60.0, golang.org/x/sys/unix@v0.48.0, golang.org/x/sys/windows@v0.48.0, golang.org/x/text@v0.42.0</summary>
 
 ```
 Copyright 2009 The Go Authors.
@@ -277,7 +278,7 @@ SOFTWARE.
 </details>
 
 <details>
-<summary>Applies to: github.com/go-logr/logr@v1.4.3</summary>
+<summary>Applies to: github.com/go-logr/logr@v1.4.4</summary>
 
 ```
 Apache License
@@ -486,7 +487,7 @@ Apache License
 </details>
 
 <details>
-<summary>Applies to: github.com/go-logr/stdr@v1.2.2, go.opentelemetry.io/auto/sdk@v1.2.1, go.opentelemetry.io/proto/otlp@v1.10.0, google.golang.org/genproto/googleapis/api/httpbody@v0.0.0-20260414002931-afd174a4e478, google.golang.org/genproto/googleapis/rpc/status@v0.0.0-20260414002931-afd174a4e478, google.golang.org/grpc@v1.82.1</summary>
+<summary>Applies to: github.com/go-logr/stdr@v1.2.2, go.opentelemetry.io/auto/sdk@v1.2.1, go.opentelemetry.io/proto/otlp@v1.11.0, google.golang.org/genproto/googleapis/api/httpbody@v0.0.0-20260928230214-8a89bd6388cc, google.golang.org/genproto/googleapis/rpc/status@v0.0.0-20260928230214-8a89bd6388cc, google.golang.org/grpc@v1.83.2</summary>
 
 ```
 Apache License
@@ -793,7 +794,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 </details>
 
 <details>
-<summary>Applies to: github.com/grpc-ecosystem/grpc-gateway/v2@v2.28.0</summary>
+<summary>Applies to: github.com/grpc-ecosystem/grpc-gateway/v2@v2.30.0</summary>
 
 ```
 Copyright (c) 2015, Gengo, Inc.
@@ -886,7 +887,7 @@ SOFTWARE.
 </details>
 
 <details>
-<summary>Applies to: go.opentelemetry.io/otel@v1.43.0, go.opentelemetry.io/otel/exporters/otlp/otlptrace@v1.43.0, go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp@v1.43.0, go.opentelemetry.io/otel/metric@v1.43.0, go.opentelemetry.io/otel/sdk@v1.43.0, go.opentelemetry.io/otel/trace@v1.43.0</summary>
+<summary>Applies to: go.opentelemetry.io/otel@v1.47.0, go.opentelemetry.io/otel/exporters/otlp/otlptrace@v1.47.0, go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp@v1.47.0, go.opentelemetry.io/otel/log@v1.47.0, go.opentelemetry.io/otel/metric@v1.47.0, go.opentelemetry.io/otel/sdk@v1.47.0, go.opentelemetry.io/otel/trace@v1.47.0</summary>
 
 ```
 Apache License
@@ -1125,7 +1126,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 </details>
 
 <details>
-<summary>Applies to: google.golang.org/protobuf@v1.36.11</summary>
+<summary>Applies to: google.golang.org/protobuf@v1.36.12</summary>
 
 ```
 Copyright (c) 2018 The Go Authors. All rights reserved.
