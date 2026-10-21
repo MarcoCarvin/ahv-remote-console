@@ -105,9 +105,10 @@ To deploy the agent in a managed environment:
 6. The installer offers to restart the VM. A restart applies the boot resolution.
 
 > [!NOTE]
-> The installer window does not mention the firmware resolution change, and the UAC
-> prompt names the agent rather than a display tool. This page is the full
-> description of what the elevated step does.
+> The UAC prompt names the agent, "AHV Remote Console Guest Agent", not a display
+> tool. The installer window states before the prompt that it sets the VM's startup
+> resolution in its UEFI firmware and that you can decline it. When the installer
+> runs without a window, a message box says the same before the prompt.
 
 ## Install on Linux
 

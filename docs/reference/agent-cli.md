@@ -312,7 +312,8 @@ already at the standard resolution.
 
 > [!NOTE]
 > The UAC dialog names this binary, "AHV Remote Console Guest Agent", not a display
-> tool. The installer UI does not mention the display change. If the operator declines
+> tool. The installer window, or the message box when there is no window, states
+> before the prompt that it writes the firmware boot resolution. If the operator declines
 > the prompt, or the variable store is read-only, setup continues and the daemon sets
 > the running display anyway.
 
