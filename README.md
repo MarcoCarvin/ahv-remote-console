@@ -27,6 +27,20 @@ Clipboard sync. This needs the host module and the guest agent:
   VMs stay live-migratable.
 - The guest agent also sets the guest's display resolution to fit the window.
 
+## Demo
+
+<video src="https://github.com/user-attachments/assets/29e9d2fe-991e-419d-873d-c1f1ff9d31b1" controls width="100%"></video>
+
+The demo runs 1:39 and covers:
+
+- **Sign-in:** signing in through SSO to a live Prism Central, and how the VMs you
+  see change with your permissions.
+- **Organisation:** folders and tags to arrange VMs the way you work.
+- **Console access:** the VM console opened through an active VPN tunnel, even when
+  the VM cannot be reached over the network.
+- **Clipboard:** copy and paste in both directions between the VM and your
+  workstation.
+
 ## What you install
 
 | Component | Where it runs | Needed for | What it changes |
