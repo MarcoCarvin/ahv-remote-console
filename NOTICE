@@ -7,6 +7,16 @@ an agent ISO into guest virtual machines, and includes modifications that change
 how those vendor components are used. It is not a Nutanix product, and it has
 not been reviewed, endorsed or supported by Nutanix, Inc.
 
+Clipboard sync needs two optional components outside the desktop app: a host
+module that is installed as a libvirt hook on Nutanix AHV hypervisor hosts, and a
+guest agent that runs inside each virtual machine. Installing the host module
+modifies hosts that Nutanix manages. It is not supported by Nutanix, it can affect
+your Nutanix support, and AHV upgrades can remove or break it. Install it only in
+environments you own or are authorised to change, and at your own risk. The
+software is provided "AS IS", without warranties or conditions of any kind, as
+stated in sections 7 and 8 of the Apache License 2.0. The authors accept no
+liability for outages, data loss or other damage resulting from its use.
+
 Nutanix, AHV, Prism and Nutanix Guest Tools are trademarks of Nutanix, Inc. They
 are named in this repository only to describe compatibility. This repository
 does not contain Nutanix source code or binaries.

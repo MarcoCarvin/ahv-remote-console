@@ -12,4 +12,5 @@ Console.
 
 > [!NOTE]
 > This is a community project, not a Nutanix product. Nutanix support does not cover
-> this software. See [NOTICE](NOTICE).
+> this software, including the host module installed on AHV hosts. See
+> [NOTICE](NOTICE).
