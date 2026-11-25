@@ -24,8 +24,8 @@
     "test": "node --test"
   },
   "devDependencies": {
-    "node-addon-api": "^8.3.0",
-    "node-gyp": "^11.0.0",
+    "node-addon-api": "^8.9.2",
+    "node-gyp": "^13.1.0",
     "prebuildify": "^6.0.1"
   }
 }
